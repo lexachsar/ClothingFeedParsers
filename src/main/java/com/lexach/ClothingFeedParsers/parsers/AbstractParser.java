@@ -1,4 +1,4 @@
-package com.lexach.netcracker.jsoup.parsers;
+package com.lexach.ClothingFeedParsers.parsers;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -9,6 +9,8 @@ import java.io.IOException;
 public abstract class AbstractParser implements ParserInterface {
 
     protected Document root;
+
+    protected Long idRetailer;
 
     protected String menCategory;
 
