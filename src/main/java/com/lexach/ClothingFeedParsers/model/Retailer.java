@@ -12,8 +12,13 @@ public class Retailer {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @NotBlank
-    @Column(name = "name", nullable = false)
+    @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @Column(name = "rootUrl", nullable = false, unique = true)
+    private String rootUrl;
+
+    @Column(name = "parserClassName", nullable = false, unique = true)
+    private String parserClassName;
 
 }

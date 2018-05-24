@@ -37,8 +37,6 @@ public class Product {
     @Column(name = "url", nullable = false)
     private String url;
 
-    // TODO add spring CREATEDAT annotation
-
     @Column(name = "createdAt", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
@@ -51,5 +49,8 @@ public class Product {
 
     @Column(name = "idGeder")
     private Long idGender;
+
+    @Column(name = "manufacturedCountryId")
+    private Long manufacturedCountryId;
 
 }
