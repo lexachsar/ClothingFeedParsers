@@ -1,6 +1,7 @@
 package com.lexach.ClothingFeedParsers.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 @Table(name = "ProductCategory")
@@ -13,6 +14,9 @@ public class ProductCategory {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @OneToMany(mappedBy = "category")
+    private Set<Product> products;
 
     public Long getId() {
         return id;
@@ -28,5 +32,13 @@ public class ProductCategory {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

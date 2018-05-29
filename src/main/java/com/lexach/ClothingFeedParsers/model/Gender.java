@@ -2,6 +2,7 @@ package com.lexach.ClothingFeedParsers.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.Set;
 
 @Entity
 @Table(name = "Gender")
@@ -14,6 +15,13 @@ public class Gender {
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @OneToMany(mappedBy = "gender")
+    private Set<Product> products;
+
+    public Gender(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -29,5 +37,13 @@ public class Gender {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "Product")
@@ -19,17 +20,25 @@ public class Product {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "idRetailer", nullable = false)
-    private Long idRetailer;
+    @ManyToOne
+    @JoinColumn(name = "idRetailer", nullable = false)
+    private Retailer retailer;
 
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "idCategory", nullable = false)
-    private Long idCategory;
+    @ManyToOne
+    @JoinColumn(name = "idCategory", nullable = false)
+    private ProductCategory category;
 
     @Column(name = "price", nullable = false)
-    private Integer price;
+    private Double price;
+
+    @Column(name = "oldPrice", nullable = false)
+    private Double oldPrice;
+
+    @Column(name = "priceCurrency", nullable = false)
+    private String priceCurrency;
 
     @Column(name = "brandName", nullable = false)
     private String brandName;
@@ -47,10 +56,120 @@ public class Product {
     @CreatedDate
     private Date updaedAt;
 
-    @Column(name = "idGeder")
-    private Long idGender;
+    @ManyToOne
+    @JoinColumn(name = "idGeder")
+    private Gender gender;
 
-    @Column(name = "manufacturedCountryId")
-    private Long manufacturedCountryId;
+    @ManyToOne
+    @JoinColumn(name = "manufacturedCountryId")
+    private Country manufacturedCountry;
 
+    // One to many relations.
+    @OneToMany(mappedBy = "product")
+    private Set<ProductColour> productColours;
+
+    @OneToMany(mappedBy = "product")
+    private Set<ProductImage> productImages;
+
+    @OneToMany()
+    private Set<UserBookmark> userBookmarks;
+
+    @OneToMany()
+    private Set<ProductSize> productSize;
+
+    public Retailer getRetailer() {
+        return retailer;
+    }
+
+    public void setRetailer(Retailer retailer) {
+        this.retailer = retailer;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
+    public String getPriceCurrency() {
+        return priceCurrency;
+    }
+
+    public void setPriceCurrency(String priceCurrency) {
+        this.priceCurrency = priceCurrency;
+    }
+
+    public String getBrandName() {
+        return brandName;
+    }
+
+    public void setBrandName(String brandName) {
+        this.brandName = brandName;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public ProductCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ProductCategory category) {
+        this.category = category;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Date getUpdaedAt() {
+        return updaedAt;
+    }
+
+    public void setUpdaedAt(Date updaedAt) {
+        this.updaedAt = updaedAt;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Country getManufacturedCountry() {
+        return manufacturedCountry;
+    }
+
+    public void setManufacturedCountry(Country manufacturedCountry) {
+        this.manufacturedCountry = manufacturedCountry;
+    }
+
+    public Double getOldPrice() {
+        return oldPrice;
+    }
+
+    public void setOldPrice(Double oldPrice) {
+        this.oldPrice = oldPrice;
+    }
 }

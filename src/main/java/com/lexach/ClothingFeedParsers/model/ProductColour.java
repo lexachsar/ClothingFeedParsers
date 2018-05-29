@@ -1,4 +1,7 @@
-package com.lexach.ClothingFeed.model;
+package com.lexach.ClothingFeedParsers.model;
+
+import com.lexach.ClothingFeedParsers.model.Colour;
+import com.lexach.ClothingFeedParsers.model.Product;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,10 +15,14 @@ public class ProductColour {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "idProduct", nullable = false)
-    private Long idProduct;
+    @ManyToOne
+    @JoinColumn(name = "idProduct", nullable = false)
+    private Product product;
 
-    @Column(name = "idColour", nullable = false)
-    private Long idColour;
+    @ManyToOne
+    @JoinColumn(name = "idColour", nullable = false)
+    private Colour colour;
+
+
 
 }

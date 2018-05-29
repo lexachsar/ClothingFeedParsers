@@ -12,10 +12,14 @@ public class ProductSize {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "idProduct", nullable = false)
-    private Long idProduct;
+    @ManyToOne
+    @JoinColumn(name = "idProduct", nullable = false)
+    private Product product;
 
-    @Column(name = "idSize", nullable = false)
-    private Long idSize;
+    @Column(name = "size", nullable = false)
+    private String size;
 
+    @ManyToOne
+    @JoinColumn(name = "sizeCountryId", nullable = false)
+    private Country sizeCountry;
 }

@@ -22,9 +22,12 @@ public class ProductImage {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @ManyToOne
+    @JoinColumn(name = "idProduct", nullable = false)
+    private Product product;
+
     @Column(name = "imageUrl", nullable = false)
     private String imageUrl;
-
 
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
@@ -66,5 +69,13 @@ public class ProductImage {
 
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

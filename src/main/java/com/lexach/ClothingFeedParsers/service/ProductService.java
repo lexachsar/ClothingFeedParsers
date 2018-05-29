@@ -4,16 +4,14 @@ import com.lexach.ClothingFeedParsers.model.Product;
 
 public interface ProductService {
 
+    Product save(Product product);
+
     /**
-     * Create Product Object.
-     * @return
+     * Gets product if it's presented in database.
+     * Otherwise creates new instance of Product object.
+     * @return New or existing product.
+     * @param productParam New product instance created outside of the database.
      */
-    Product createProduct();
-
-    Product compareProducts(Product prod1, Product prod2);
-
-    Product registerProduct();
-
-    Product updateProduct();
+    public Product getOrCreate(Product productParam);
 
 }
