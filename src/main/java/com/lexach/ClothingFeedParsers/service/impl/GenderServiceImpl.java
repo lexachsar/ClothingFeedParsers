@@ -13,6 +13,9 @@ public class GenderServiceImpl implements GenderService {
     @Autowired
     private GenderRepository genderRepository;
 
+    public GenderServiceImpl() {
+    }
+
     @Override
     public Gender save(Gender gender) {
         return genderRepository.save(gender);

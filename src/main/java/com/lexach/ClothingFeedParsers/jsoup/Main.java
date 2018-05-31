@@ -16,20 +16,22 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
-        String productLink = "https://www.wildberries.ru/catalog/zhenshchinam/odezhda";
+        for(int i = 1; i <= 500; i++) {
 
-        // Product Document Object Model
-        Document doc = Jsoup.connect(productLink).timeout(10*1000).get();
+            Document doc = Jsoup.connect("https://www.wildberries.ru/catalog/muzhchinam/odezhda/futbolki-i-mayki" + "?page=" + i).get();
 
-        // Get inside container, where big part of product info is situated.
-        //Element topmenus = doc.getElementsByClass("topmenus").first();
+            Elements links = doc.getElementsByClass("catalog-prev-link");
 
-        //System.out.println(topmenus);
+            System.out.println(i);
 
-        Element womenGender = doc.select("sidemenu").first();
+            for (Element link : links) {
 
-        System.out.println(womenGender);
+                // get product info
+                System.out.println("https://www.wildberries.ru/" + link.attr("href"));
 
-        //Elements womenCategories = womenGender.select("a[href]");
+            }
+        }
+
+
     }
 }

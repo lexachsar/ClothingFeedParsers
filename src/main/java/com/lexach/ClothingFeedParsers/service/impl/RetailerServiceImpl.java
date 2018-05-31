@@ -11,8 +11,11 @@ import java.util.Objects;
 @Service
 public class RetailerServiceImpl implements RetailerService {
 
-    @Autowired
     private RetailerRepository retailerRepository;
+
+    public RetailerServiceImpl(RetailerRepository retailerRepository) {
+        this.retailerRepository = retailerRepository;
+    }
 
     @Override
     public Retailer save(Retailer retailer) {
@@ -41,5 +44,4 @@ public class RetailerServiceImpl implements RetailerService {
             return databaseRetailer;
         }
     }
-
 }

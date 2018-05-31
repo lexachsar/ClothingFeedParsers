@@ -19,6 +19,9 @@ public class Gender {
     @OneToMany(mappedBy = "gender")
     private Set<Product> products;
 
+    public Gender() {
+    }
+
     public Gender(String name) {
         this.name = name;
     }

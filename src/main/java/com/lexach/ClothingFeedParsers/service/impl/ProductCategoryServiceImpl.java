@@ -14,6 +14,9 @@ public class ProductCategoryServiceImpl implements ProductCategoryService {
     @Autowired
     ProductCategoryRepository productCategoryRepository;
 
+    public ProductCategoryServiceImpl() {
+    }
+
     @Override
     public ProductCategory save(ProductCategory productCategory) {
 

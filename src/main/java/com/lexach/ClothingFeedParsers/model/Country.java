@@ -23,6 +23,9 @@ public class Country {
     @OneToMany(mappedBy = "sizeCountry")
     private Set<ProductSize> prouctSizes;
 
+    public Country() {
+    }
+
     public Country(String name) {
         this.name = name;
     }

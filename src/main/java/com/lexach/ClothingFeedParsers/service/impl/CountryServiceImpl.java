@@ -10,8 +10,12 @@ import java.util.Objects;
 
 @Service
 public class CountryServiceImpl implements CountryService {
+
     @Autowired
     CountryRepository countryRepository;
+
+    public CountryServiceImpl() {
+    }
 
     @Override
     public Country save(Country country) {

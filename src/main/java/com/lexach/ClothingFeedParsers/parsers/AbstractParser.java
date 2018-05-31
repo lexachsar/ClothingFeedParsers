@@ -3,16 +3,22 @@ package com.lexach.ClothingFeedParsers.parsers;
 import com.lexach.ClothingFeedParsers.model.*;
 import com.lexach.ClothingFeedParsers.service.*;
 import com.lexach.ClothingFeedParsers.service.impl.CountryServiceImpl;
+import com.lexach.ClothingFeedParsers.service.impl.ProductServiceImpl;
+import com.lexach.ClothingFeedParsers.service.impl.RetailerServiceImpl;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+@Component
 public abstract class AbstractParser {
 
     // Services
@@ -39,7 +45,7 @@ public abstract class AbstractParser {
     // Gender name oppsoite gender link.
     protected Map<String, String> genders;
 
-    AbstractParser(String rootLink, String name, String menGenderLink, String womenGenderLink) {
+    public void init(String rootLink, String name, String menGenderLink, String womenGenderLink) {
 
         try {
             this.root = Jsoup.connect(rootLink).get();
@@ -54,11 +60,14 @@ public abstract class AbstractParser {
         this.retailer = new Retailer(name, rootLink, this.getClass().getName());
         // Check database for retailer, if it exists.
         this.retailer = retailerService.getOrCreate(this.retailer);
+        this.retailerService.save(this.retailer);
 
+        this.genders = new HashMap();
         // Put men category link
         this.genders.put("Men", menGenderLink);
         // Put women category link
         this.genders.put("Women", womenGenderLink);
+
     }
 
     /**
@@ -72,7 +81,7 @@ public abstract class AbstractParser {
      * Main method, that parses etire site.
      * @throws IOException TODO add IOException handling.
      */
-    protected void parseRoot() throws IOException {
+    public void parseRoot() throws IOException {
 
         String menCategoryLink = genders.get("Men");
         parseGender(menCategoryLink, "Men");
@@ -91,9 +100,10 @@ public abstract class AbstractParser {
 
     /**
      * Method, that parses some category.
-     * @param categoryLink Link to category
+     * @param category category to parse.
+     * @param genderParam gender entity, needed for parseProduct() method.
      */
-    protected abstract void parseCategory(String categoryLink, String categoryName) throws IOException;
+    protected abstract void parseCategory(AbstractParserCategory category, Gender genderParam) throws IOException;
 
 
     /**
@@ -106,6 +116,8 @@ public abstract class AbstractParser {
         Country varCountry = new Country(countryName);
 
         countryService.getOrCreate(varCountry);
+
+        countryService.save(varCountry);
 
         product.setManufacturedCountry(varCountry);
 

@@ -2,6 +2,7 @@ package com.lexach.ClothingFeedParsers.model;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -29,6 +30,7 @@ public class Retailer {
         this.name = name;
         this.rootUrl = rootUrl;
         this.parserClassName = parserClassName;
+        this.products = new HashSet();
     }
 
     public Long getId() {

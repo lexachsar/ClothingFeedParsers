@@ -2,6 +2,8 @@ package com.lexach.ClothingFeedParsers.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -34,7 +36,7 @@ public class Product {
     @Column(name = "price", nullable = false)
     private Double price;
 
-    @Column(name = "oldPrice", nullable = false)
+    @Column(name = "oldPrice")
     private Double oldPrice;
 
     @Column(name = "priceCurrency", nullable = false)
@@ -46,14 +48,14 @@ public class Product {
     @Column(name = "url", nullable = false)
     private String url;
 
-    @Column(name = "createdAt", nullable = false, updatable = false)
+    @Column(name = "createdAt")
     @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private Date createdAt;
 
-    @Column(name = "updatedAt", nullable = false, updatable = false)
+    @Column(name = "updatedAt")
     @Temporal(TemporalType.TIMESTAMP)
-    @CreatedDate
+    @LastModifiedDate
     private Date updaedAt;
 
     @ManyToOne
@@ -76,6 +78,9 @@ public class Product {
 
     @OneToMany()
     private Set<ProductSize> productSize;
+
+    public Product() {
+    }
 
     public Retailer getRetailer() {
         return retailer;
