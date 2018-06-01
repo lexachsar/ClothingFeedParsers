@@ -112,12 +112,11 @@ public abstract class AbstractParser {
      * @param countryName Name of the country to create or find + assign.
      * @return Finded in the database, or created country object.
      */
+    // TODO Fix org.hibernate.exception.ConstraintViolationException exception
     protected Country registerAndSetManufacturedCountry(Product product, String countryName) {
         Country varCountry = new Country(countryName);
 
         countryService.getOrCreate(varCountry);
-
-        countryService.save(varCountry);
 
         product.setManufacturedCountry(varCountry);
 

@@ -51,12 +51,12 @@ public class WildberriesParser extends AbstractParser {
         genderService.save(resultGender);
 
         // TODO find categories and parse.
-        if( resultGender.getName().equals("Women") ) {
-            for (AbstractParserCategory category: womenWildberriesCategories) {
+        if (resultGender.getName().equals("Women")) {
+            for (AbstractParserCategory category : womenWildberriesCategories) {
                 parseCategory(category, resultGender);
             }
         } else {
-            for (AbstractParserCategory category: menWildberriesCategories) {
+            for (AbstractParserCategory category : menWildberriesCategories) {
                 parseCategory(category, resultGender);
             }
         }
@@ -70,7 +70,7 @@ public class WildberriesParser extends AbstractParser {
 
         wildberriesCategory.save();
 
-        for(int i = 1; i <= 500; i++) {
+        for (int i = 1; i <= 500; i++) {
 
             Document doc = Jsoup.connect(wildberriesCategory.getLink() + "?page=" + i).get();
 
@@ -92,7 +92,7 @@ public class WildberriesParser extends AbstractParser {
 
         try {
             // Product Document Object Model
-            Document doc = Jsoup.connect(productLink).timeout(10*1000).get();
+            Document doc = Jsoup.connect(productLink).timeout(10 * 1000).get();
 
             // Get inside container, where big part of product info is situated.
             Element productInfo = doc.getElementById("insideContainer");
@@ -153,16 +153,31 @@ public class WildberriesParser extends AbstractParser {
             }
             */
 
+            /*
             // TODO set manufactured country id
             for (Element row : productTable) {
                 if (row.text().equals("Страна производитель:")) {
                     registerAndSetManufacturedCountry( product, row.nextElementSibling().text() );
                 }
             }
+            */
+
+            /* Note: Need to create dedicated methods for this operations.
+
+            // TODO Register ProductColours
+
+            // TODO Register all ProductImages
+
+
+            // TODO Register ProductSize
+            */
+
+            // !!! TEMPORARY !!! set main product image
+            product.setMainImageLink("https:" + productInfo.getElementsByAttributeValue("itemprop", "image").first().attr("content"));
 
             productService.save(product);
 
-        } catch(SocketTimeoutException exception) {
+        } catch (SocketTimeoutException exception) {
             // TODO add logging.
             System.out.println("Socket timeout EXCEPTION in: " + productLink);
             System.out.println("Change timeout option in Jsoup.connect() method if you want this product to be parsed.");
@@ -172,14 +187,6 @@ public class WildberriesParser extends AbstractParser {
             exception.printStackTrace();
             System.out.println("Exception");
         }
-
-        /* Note: Need to create dedicated methods for this operations.
-        // TODO Register ProductColours
-
-        // TODO Register ProductImages
-
-        // TODO Register ProductSize
-        */
     }
 
 

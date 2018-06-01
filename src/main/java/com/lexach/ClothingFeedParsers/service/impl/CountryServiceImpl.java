@@ -27,6 +27,7 @@ public class CountryServiceImpl implements CountryService {
         Country databaseCountry = countryRepository.findByName(countryParam.getName());
 
         if(Objects.isNull(databaseCountry)) {
+            countryRepository.save(countryParam);
             return countryParam;
         } else {
             return databaseCountry;
