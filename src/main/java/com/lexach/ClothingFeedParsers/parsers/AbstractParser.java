@@ -9,6 +9,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -81,6 +82,7 @@ public abstract class AbstractParser {
      * Main method, that parses etire site.
      * @throws IOException TODO add IOException handling.
      */
+    @Scheduled(cron = "30 2 * * * MON-FRI")
     public void parseRoot() throws IOException {
 
         String menCategoryLink = genders.get("Men");
