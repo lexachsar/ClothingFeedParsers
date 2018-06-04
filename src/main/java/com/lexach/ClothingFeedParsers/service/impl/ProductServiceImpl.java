@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product getOrCreate(Product productParam) {
-        Product databaseProduct = productRepository.findByNameAndBrandName(productParam.getName(), productParam.getBrandName());
+        Product databaseProduct = productRepository.findByUrl(productParam.getUrl());
 
         // If existing databaseProduct is null -- return productParam.
         // Otherwise -- return existing Product from database.
