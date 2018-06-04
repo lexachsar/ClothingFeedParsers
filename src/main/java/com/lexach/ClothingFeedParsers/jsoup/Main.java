@@ -17,14 +17,18 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         // Product Document Object Model
-        Document doc = Jsoup.connect("https://www.wildberries.ru/catalog/4825129/detail.aspx?targetUrl=GP").timeout(10 * 1000).get();
+        Document doc = Jsoup.connect("https://www.wildberries.ru/catalog/5013984/detail.aspx?targetUrl=GP").timeout(10 * 1000).get();
 
         // Get inside container, where big part of product info is situated.
         Element productInfo = doc.getElementById("insideContainer");
 
-        //System.out.println(productInfo.getElementsByClass("i-slider-v2-item").first());
+        Elements sizes = productInfo.getElementsByTag("label");
 
-        System.out.println(productInfo.getElementsByAttributeValue("itemprop", "image").first().attr("content"));
+        for (Element size : sizes) {
+            System.out.println(size);
+        }
+
+        //System.out.println(productInfo.getElementsByAttributeValue("itemprop", "image").first().attr("content"));
 
     }
 }

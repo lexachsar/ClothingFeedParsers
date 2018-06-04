@@ -38,12 +38,15 @@ public abstract class AbstractParser {
     @Autowired
     protected GenderService genderService;
 
+    @Autowired
+    protected ProductImageService productImageService;
+
     // Other Data.
     protected Document root;
 
     protected Retailer retailer;
 
-    // Gender name oppsoite gender link.
+    // Gender name opposite gender link.
     protected Map<String, String> genders;
 
     public void init(String rootLink, String name, String menGenderLink, String womenGenderLink) {
@@ -79,17 +82,18 @@ public abstract class AbstractParser {
     protected abstract void parseProduct(String productLink, ProductCategory categoryParam, Gender genderParam) throws IOException;
 
     /**
-     * Main method, that parses etire site.
+     * Main method, that parses entire site.
      * @throws IOException TODO add IOException handling.
      */
     @Scheduled(cron = "30 2 * * * MON-FRI")
     public void parseRoot() throws IOException {
 
+        String womenCategoryLink = genders.get("Women");
+        parseGender(womenCategoryLink, "Women");
+
         String menCategoryLink = genders.get("Men");
         parseGender(menCategoryLink, "Men");
 
-        String womenCategoryLink = genders.get("Women");
-        parseGender(womenCategoryLink, "Women");
 
     }
 

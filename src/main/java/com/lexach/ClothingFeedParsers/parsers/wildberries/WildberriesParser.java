@@ -3,6 +3,7 @@ package com.lexach.ClothingFeedParsers.parsers.wildberries;
 import com.lexach.ClothingFeedParsers.model.Gender;
 import com.lexach.ClothingFeedParsers.model.Product;
 import com.lexach.ClothingFeedParsers.model.ProductCategory;
+import com.lexach.ClothingFeedParsers.model.ProductImage;
 import com.lexach.ClothingFeedParsers.parsers.AbstractParser;
 import com.lexach.ClothingFeedParsers.parsers.AbstractParserCategory;
 import org.jsoup.Jsoup;
@@ -138,13 +139,6 @@ public class WildberriesParser extends AbstractParser {
             }
             */
 
-            // Other tables
-            //TODO set sizes
-
-            // TODO set colours
-
-            // TODO set images
-
             /* get category
             for (Element row : productTable) {
                 if (row.text().equals("Комплектация:")) {
@@ -162,20 +156,25 @@ public class WildberriesParser extends AbstractParser {
             }
             */
 
-            /* Note: Need to create dedicated methods for this operations.
-
-            // TODO Register ProductColours
-
-            // TODO Register all ProductImages
-
-
-            // TODO Register ProductSize
-            */
-
             // !!! TEMPORARY !!! set main product image
             product.setMainImageLink("https:" + productInfo.getElementsByAttributeValue("itemprop", "image").first().attr("content"));
 
+            // Save product entity.
             productService.save(product);
+
+
+            // ### Set foreign keys ###
+
+            // Register Product Images
+            setProductImages(productInfo, product);
+
+
+            // TODO Register all ProductColours
+
+
+            // TODO Register ProductSizeproductService.save(product);
+
+            // #########################
 
         } catch (SocketTimeoutException exception) {
             // TODO add logging.
@@ -189,9 +188,43 @@ public class WildberriesParser extends AbstractParser {
         }
     }
 
+    /**
+     * Set all product images.
+     * @param productInfo html element with product info.
+     * @param product product to bind images to.
+     */
+    private void setProductImages(Element productInfo, Product product) {
+
+        Elements images = productInfo.getElementsByAttribute("data-sl-original");
+
+        for (Element imageElement : images) {
+
+            String imageLink = "https:" + imageElement.attr("data-zoom");
+
+            ProductImage image = productImageService.getOrCreate(new ProductImage(product, imageLink));
+
+            productImageService.save(image);
+
+        }
+
+    }
+
+    /**
+     * Set all product sizes.
+     * @param productInfo html element with product info.
+     * @param product product to bind sizes to.
+     */
+    private void setProductSizes(Element productInfo, Product product) {
+
+    }
+
+
+    private void setProductColours() {
+
+    }
 
     // TODO this method is temporary. Try to find another way to set categories.
-    public void setWildberriesCategories() {
+    private void setWildberriesCategories() {
         this.womenWildberriesCategories = new LinkedList<WildberriesCategory>();
         this.womenWildberriesCategories.add(new WildberriesCategory("Dresses", "/zhenshchinam/odezhda/platya", productCategoryService));
         this.womenWildberriesCategories.add(new WildberriesCategory("Shirts", "/zhenshchinam/odezhda/futbolki-i-topy", productCategoryService));
