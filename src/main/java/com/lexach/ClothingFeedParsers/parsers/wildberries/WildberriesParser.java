@@ -42,24 +42,29 @@ public class WildberriesParser extends AbstractParser {
     }
 
     @Override
-    protected void parseGender(String genderLink, String genderName) throws IOException {
-        // Get gender DOM
-        Document doc = Jsoup.connect(genderLink).get();
+    protected void parseGender(String genderLink, String genderName) {
 
-        Gender resultGender = new Gender(genderName);
-        resultGender = genderService.getOrCreate(resultGender);
+        try {
+            // Get gender DOM
+            Document doc = Jsoup.connect(genderLink).get();
 
-        genderService.save(resultGender);
+            Gender resultGender = new Gender(genderName);
+            resultGender = genderService.getOrCreate(resultGender);
 
-        // TODO find categories and parse.
-        if (resultGender.getName().equals("Women")) {
-            for (AbstractParserCategory category : womenWildberriesCategories) {
-                parseCategory(category, resultGender);
+            genderService.save(resultGender);
+
+            // TODO find categories and parse.
+            if (resultGender.getName().equals("Women")) {
+                for (AbstractParserCategory category : womenWildberriesCategories) {
+                    parseCategory(category, resultGender);
+                }
+            } else {
+                for (AbstractParserCategory category : menWildberriesCategories) {
+                    parseCategory(category, resultGender);
+                }
             }
-        } else {
-            for (AbstractParserCategory category : menWildberriesCategories) {
-                parseCategory(category, resultGender);
-            }
+        } catch(IOException e) {
+            System.out.println("IO exception in gender.");
         }
 
     }
@@ -67,13 +72,17 @@ public class WildberriesParser extends AbstractParser {
 
     @Override
     // TODO add IOexception handling.
-    protected void parseCategory(AbstractParserCategory wildberriesCategory, Gender genderParam) throws IOException {
+    protected void parseCategory(AbstractParserCategory wildberriesCategory, Gender genderParam) {
+
+        try {
 
         wildberriesCategory.save();
 
         for (int i = 1; i <= 500; i++) {
 
-            Document doc = Jsoup.connect(wildberriesCategory.getLink() + "?page=" + i).get();
+            Document doc = null;
+
+                doc = Jsoup.connect(wildberriesCategory.getLink() + "?page=" + i).get();
 
             Elements links = doc.getElementsByClass("catalog-prev-link");
 
@@ -83,6 +92,10 @@ public class WildberriesParser extends AbstractParser {
                 parseProduct("https://www.wildberries.ru/" + link.attr("href"), wildberriesCategory.getProductCategory(), genderParam);
 
             }
+        }
+        } catch (IOException e) {
+            // TODO add exception handling
+            System.out.println("IO Category exception.");;
         }
 
 
