@@ -79,11 +79,12 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private Set<ProductImage> productImages;
 
-    @OneToMany()
+    @OneToMany(mappedBy = "product")
     private Set<UserBookmark> userBookmarks;
 
     @OneToMany()
     private Set<ProductSize> productSize;
+
 
     public Product() {
     }
@@ -198,5 +199,29 @@ public class Product {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Set<ProductImage> getProductImages() {
+        return productImages;
+    }
+
+    public void setProductImages(Set<ProductImage> productImages) {
+        this.productImages = productImages;
+    }
+
+    public Set<ProductSize> getProductSize() {
+        return productSize;
+    }
+
+    public void setProductSize(Set<ProductSize> productSize) {
+        this.productSize = productSize;
+    }
+
+    public Set<UserBookmark> getUserBookmarks() {
+        return userBookmarks;
+    }
+
+    public void setUserBookmarks(Set<UserBookmark> userBookmarks) {
+        this.userBookmarks = userBookmarks;
     }
 }
