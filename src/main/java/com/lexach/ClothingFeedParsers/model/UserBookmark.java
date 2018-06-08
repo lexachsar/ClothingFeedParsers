@@ -9,7 +9,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "UserBookmark")
+@Table(name = "UserBookmark", uniqueConstraints={
+        @UniqueConstraint(columnNames = {"idProduct", "idUser"}) })
 @EntityListeners(AuditingEntityListener.class)
 @JsonIgnoreProperties(value = {"createdAt", "updatedAt"}, allowGetters = true)
 public class UserBookmark {
