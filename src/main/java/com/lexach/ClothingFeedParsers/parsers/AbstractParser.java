@@ -18,7 +18,6 @@ public abstract class AbstractParser {
 
     public abstract void parseRoot();
 
-    @PostConstruct
     public void init(String rootLink) {
         try {
             this.root = Jsoup.connect(rootLink).get();

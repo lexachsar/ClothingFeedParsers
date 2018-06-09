@@ -17,18 +17,29 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         // Product Document Object Model
-        Document doc = Jsoup.connect("https://www.wildberries.ru/catalog/5013984/detail.aspx?targetUrl=GP").timeout(10 * 1000).get();
+        Document doc = Jsoup.connect("https://colorscheme.ru/color-names.html").timeout(10 * 1000).get();
 
-        // Get inside container, where big part of product info is situated.
-        Element productInfo = doc.getElementById("insideContainer");
+        Element table = doc.getElementById("color-names");
+        Elements colourRows = table.select("tr");
 
-        Elements sizes = productInfo.getElementsByTag("label");
+        for (int i = 1; i < colourRows.size(); i++) {
+            Element row = colourRows.get(i);
+            Elements cols = row.select("td");
 
-        for (Element size : sizes) {
-            System.out.println(size);
+            // Name
+            System.out.println(cols.get(1).text());
+            // HEX
+            System.out.println(cols.get(2).text());
+
+            // R
+            System.out.println(cols.get(3).text());
+            // G
+            System.out.println(cols.get(4).text());
+            // B
+            System.out.println(cols.get(5).text());
         }
 
-        //System.out.println(productInfo.getElementsByAttributeValue("itemprop", "image").first().attr("content"));
+
 
     }
 }
