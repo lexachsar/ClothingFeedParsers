@@ -4,8 +4,8 @@ import com.lexach.ClothingFeedParsers.model.Gender;
 import com.lexach.ClothingFeedParsers.model.Product;
 import com.lexach.ClothingFeedParsers.model.ProductCategory;
 import com.lexach.ClothingFeedParsers.model.ProductImage;
-import com.lexach.ClothingFeedParsers.parsers.AbstractParser;
-import com.lexach.ClothingFeedParsers.parsers.AbstractParserCategory;
+import com.lexach.ClothingFeedParsers.parsers.AbstractClothingParser;
+import com.lexach.ClothingFeedParsers.parsers.AbstractClothingParserCategory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,15 +15,18 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
-import java.sql.SQLOutput;
 import java.util.LinkedList;
 
+/**
+ * wildberries.ru parser.
+ * Gets info about products, categories, genders.
+ */
 @Component
-public class WildberriesParser extends AbstractParser {
+public class WildberriesClothingParser extends AbstractClothingParser {
 
-    private LinkedList<WildberriesCategory> womenWildberriesCategories;
+    private LinkedList<WildberriesCategoryClothing> womenWildberriesCategories;
 
-    private LinkedList<WildberriesCategory> menWildberriesCategories;
+    private LinkedList<WildberriesCategoryClothing> menWildberriesCategories;
 
     @PostConstruct
     public void init() {
@@ -33,12 +36,7 @@ public class WildberriesParser extends AbstractParser {
 
         setWildberriesCategories();
 
-        try {
-            parseRoot();
-        } catch (Exception exception) {
-
-        }
-
+        log.info(this.getClass().getName() + " initialised.");
     }
 
     @Override
@@ -55,16 +53,16 @@ public class WildberriesParser extends AbstractParser {
 
             // TODO find categories and parse.
             if (resultGender.getName().equals("Women")) {
-                for (AbstractParserCategory category : womenWildberriesCategories) {
+                for (AbstractClothingParserCategory category : womenWildberriesCategories) {
                     parseCategory(category, resultGender);
                 }
             } else {
-                for (AbstractParserCategory category : menWildberriesCategories) {
+                for (AbstractClothingParserCategory category : menWildberriesCategories) {
                     parseCategory(category, resultGender);
                 }
             }
         } catch(IOException e) {
-            System.out.println("IO exception in gender.");
+            log.error("IO exception in parseGender() method:" + e.getMessage());
         }
 
     }
@@ -72,7 +70,7 @@ public class WildberriesParser extends AbstractParser {
 
     @Override
     // TODO add IOexception handling.
-    protected void parseCategory(AbstractParserCategory wildberriesCategory, Gender genderParam) {
+    protected void parseCategory(AbstractClothingParserCategory wildberriesCategory, Gender genderParam) {
 
         try {
 
@@ -94,8 +92,7 @@ public class WildberriesParser extends AbstractParser {
             }
         }
         } catch (IOException e) {
-            // TODO add exception handling
-            System.out.println("IO Category exception.");;
+            log.error("IO exception in parseCategory() method:" + e.getMessage());
         }
 
 
@@ -189,15 +186,16 @@ public class WildberriesParser extends AbstractParser {
 
             // #########################
 
+            log.info("Parsed product " + product.getName() + product.getBrandName());
+
         } catch (SocketTimeoutException exception) {
             // TODO add logging.
-            System.out.println("Socket timeout EXCEPTION in: " + productLink);
-            System.out.println("Change timeout option in Jsoup.connect() method if you want this product to be parsed.");
+            log.error("Socket timeout EXCEPTION in: " + productLink + "\nChange timeout option in Jsoup.connect() method if you want this product to be parsed.");
         } catch (IOException exception) {
-            System.out.println("IO exception");
+            log.error("IO exception in parseCategory() method:" + exception.getMessage());
         } catch (Exception exception) {
+            log.error("Exception");
             exception.printStackTrace();
-            System.out.println("Exception");
         }
     }
 
@@ -238,40 +236,40 @@ public class WildberriesParser extends AbstractParser {
 
     // TODO this method is temporary. Try to find another way to set categories.
     private void setWildberriesCategories() {
-        this.womenWildberriesCategories = new LinkedList<WildberriesCategory>();
-        this.womenWildberriesCategories.add(new WildberriesCategory("Dresses", "/zhenshchinam/odezhda/platya", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Shirts", "/zhenshchinam/odezhda/futbolki-i-topy", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Pants", "/zhenshchinam/odezhda/bryuki-i-shorty", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Blouses", "/zhenshchinam/odezhda/bluzki-i-rubashki", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Jumpers", "/zhenshchinam/odezhda/dzhempery-i-kardigany", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Turtlenecks", "/zhenshchinam/odezhda/vodolazki", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Skirts", "/zhenshchinam/odezhda/yubki", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Outerwear", "/zhenshchinam/odezhda/verhnyaya-odezhda", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Jeans", "/zhenshchinam/odezhda/dzhinsy-dzhegginsy", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Jackets", "/zhenshchinam/odezhda/pidzhaki-i-zhakety", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Home clothes", "/zhenshchinam/odezhda/odezhda-dlya-doma", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Tunics", "/zhenshchinam/odezhda/tuniki", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Overalls", "/zhenshchinam/odezhda/kombinezony-polukombinezony", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Costumes", "/zhenshchinam/odezhda/kostyumy", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Vests", "/zhenshchinam/odezhda/zhilety", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Mantles", "/zhenshchinam/odezhda/mantii", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Hoodies", "/zhenshchinam/odezhda/hudi", productCategoryService));
-        this.womenWildberriesCategories.add(new WildberriesCategory("Sweatshirts", "/zhenshchinam/odezhda/svitshoty", productCategoryService));
+        this.womenWildberriesCategories = new LinkedList<WildberriesCategoryClothing>();
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Dresses", "/zhenshchinam/odezhda/platya", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Shirts", "/zhenshchinam/odezhda/futbolki-i-topy", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Pants", "/zhenshchinam/odezhda/bryuki-i-shorty", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Blouses", "/zhenshchinam/odezhda/bluzki-i-rubashki", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Jumpers", "/zhenshchinam/odezhda/dzhempery-i-kardigany", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Turtlenecks", "/zhenshchinam/odezhda/vodolazki", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Skirts", "/zhenshchinam/odezhda/yubki", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Outerwear", "/zhenshchinam/odezhda/verhnyaya-odezhda", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Jeans", "/zhenshchinam/odezhda/dzhinsy-dzhegginsy", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Jackets", "/zhenshchinam/odezhda/pidzhaki-i-zhakety", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Home clothes", "/zhenshchinam/odezhda/odezhda-dlya-doma", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Tunics", "/zhenshchinam/odezhda/tuniki", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Overalls", "/zhenshchinam/odezhda/kombinezony-polukombinezony", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Costumes", "/zhenshchinam/odezhda/kostyumy", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Vests", "/zhenshchinam/odezhda/zhilety", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Mantles", "/zhenshchinam/odezhda/mantii", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Hoodies", "/zhenshchinam/odezhda/hudi", productCategoryService));
+        this.womenWildberriesCategories.add(new WildberriesCategoryClothing("Sweatshirts", "/zhenshchinam/odezhda/svitshoty", productCategoryService));
 
-        this.menWildberriesCategories = new LinkedList<WildberriesCategory>();
-        this.menWildberriesCategories.add(new WildberriesCategory("Shirts", "/muzhchinam/odezhda/futbolki-i-mayki", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Pants", "/muzhchinam/odezhda/bryuki-i-shorty", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Blouses", "/muzhchinam/odezhda/rubashki", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Jeans", "/muzhchinam/odezhda/dzhinsy", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Outwear", "/muzhchinam/odezhda/verhnyaya-odezhda", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Jumpers", "/muzhchinam/odezhda/dzhempery-i-kardigany", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Mantles", "/muzhchinam/mantii", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Hoodies", "/muzhchinam/odezhda/hudi", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Costumes", "/muzhchinam/odezhda/kostyumy", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Jackets", "/muzhchinam/odezhda/pidzhaki-i-zhakety", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Sweatshirts", "/muzhchinam/odezhda/svitshoty", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Home clothes", "/muzhchinam/odezhda/odezhda-dlya-doma", productCategoryService));
-        this.menWildberriesCategories.add(new WildberriesCategory("Turtlenecks", "/muzhchinam/odezhda/vodolazki", productCategoryService));
+        this.menWildberriesCategories = new LinkedList<WildberriesCategoryClothing>();
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Shirts", "/muzhchinam/odezhda/futbolki-i-mayki", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Pants", "/muzhchinam/odezhda/bryuki-i-shorty", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Blouses", "/muzhchinam/odezhda/rubashki", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Jeans", "/muzhchinam/odezhda/dzhinsy", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Outwear", "/muzhchinam/odezhda/verhnyaya-odezhda", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Jumpers", "/muzhchinam/odezhda/dzhempery-i-kardigany", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Mantles", "/muzhchinam/mantii", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Hoodies", "/muzhchinam/odezhda/hudi", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Costumes", "/muzhchinam/odezhda/kostyumy", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Jackets", "/muzhchinam/odezhda/pidzhaki-i-zhakety", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Sweatshirts", "/muzhchinam/odezhda/svitshoty", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Home clothes", "/muzhchinam/odezhda/odezhda-dlya-doma", productCategoryService));
+        this.menWildberriesCategories.add(new WildberriesCategoryClothing("Turtlenecks", "/muzhchinam/odezhda/vodolazki", productCategoryService));
 
     }
 
