@@ -17,28 +17,11 @@ public class Main {
     public static void main(String[] args) throws IOException {
 
         // Product Document Object Model
-        Document doc = Jsoup.connect("https://colorscheme.ru/color-names.html").timeout(10 * 1000).get();
+        Document doc = Jsoup.connect("https://www.wildberries.ru//catalog/5218132/detail.aspx?targetUrl=GP").timeout(10 * 1000).get();
 
-        Element table = doc.getElementById("color-names");
-        Elements colourRows = table.select("tr");
+        Element price = doc.getElementsByAttributeValue("itemprop", "offers").first();
 
-        for (int i = 1; i < colourRows.size(); i++) {
-            Element row = colourRows.get(i);
-            Elements cols = row.select("td");
-
-            // Name
-            System.out.println(cols.get(1).text());
-            // HEX
-            System.out.println(cols.get(2).text());
-
-            // R
-            System.out.println(cols.get(3).text());
-            // G
-            System.out.println(cols.get(4).text());
-            // B
-            System.out.println(cols.get(5).text());
-        }
-
+        System.out.println(price);
 
 
     }

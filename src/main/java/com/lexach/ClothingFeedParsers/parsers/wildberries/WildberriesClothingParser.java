@@ -1,9 +1,7 @@
 package com.lexach.ClothingFeedParsers.parsers.wildberries;
 
-import com.lexach.ClothingFeedParsers.model.Gender;
-import com.lexach.ClothingFeedParsers.model.Product;
-import com.lexach.ClothingFeedParsers.model.ProductCategory;
-import com.lexach.ClothingFeedParsers.model.ProductImage;
+import com.lexach.ClothingFeedParsers.exception.EntityNotFoundException;
+import com.lexach.ClothingFeedParsers.model.*;
 import com.lexach.ClothingFeedParsers.parsers.AbstractClothingParser;
 import com.lexach.ClothingFeedParsers.parsers.AbstractClothingParserCategory;
 import org.jsoup.Jsoup;
@@ -36,6 +34,9 @@ public class WildberriesClothingParser extends AbstractClothingParser {
 
         setWildberriesCategories();
 
+        parseRoot();
+
+
         log.info(this.getClass().getName() + " initialised.");
     }
 
@@ -51,7 +52,6 @@ public class WildberriesClothingParser extends AbstractClothingParser {
 
             genderService.save(resultGender);
 
-            // TODO find categories and parse.
             if (resultGender.getName().equals("Women")) {
                 for (AbstractClothingParserCategory category : womenWildberriesCategories) {
                     parseCategory(category, resultGender);
@@ -61,7 +61,7 @@ public class WildberriesClothingParser extends AbstractClothingParser {
                     parseCategory(category, resultGender);
                 }
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             log.error("IO exception in parseGender() method:" + e.getMessage());
         }
 
@@ -69,31 +69,34 @@ public class WildberriesClothingParser extends AbstractClothingParser {
 
 
     @Override
-    // TODO add IOexception handling.
     protected void parseCategory(AbstractClothingParserCategory wildberriesCategory, Gender genderParam) {
 
-        try {
 
         wildberriesCategory.save();
 
-        for (int i = 1; i <= 500; i++) {
+        // Go to all pages in category (max i value is 500).
+        for (int i = 1; i <= 20; i++) {
+            try {
 
-            Document doc = null;
+                Document doc = null;
 
                 doc = Jsoup.connect(wildberriesCategory.getLink() + "?page=" + i).get();
 
-            Elements links = doc.getElementsByClass("catalog-prev-link");
+                Elements links = doc.getElementsByClass("catalog-prev-link");
 
-            for (Element link : links) {
+                for (Element link : links) {
 
-                // get product info
-                parseProduct("https://www.wildberries.ru/" + link.attr("href"), wildberriesCategory.getProductCategory(), genderParam);
+                    // get product info
+                    parseProduct("https://www.wildberries.ru/" + link.attr("href"), wildberriesCategory.getProductCategory(), genderParam);
 
+
+                }
+            } catch (IOException e) {
+                log.error("IO exception in parseCategory() method:" + e.getMessage());
             }
         }
-        } catch (IOException e) {
-            log.error("IO exception in parseCategory() method:" + e.getMessage());
-        }
+
+        log.info("Parsed category" + wildberriesCategory.getProductCategory().getName());
 
 
     }
@@ -179,17 +182,17 @@ public class WildberriesClothingParser extends AbstractClothingParser {
             setProductImages(productInfo, product);
 
 
-            // TODO Register all ProductColours
+            // Register all ProductColours
+            setProductColours(productInfo, product);
 
 
             // TODO Register ProductSizeproductService.save(product);
 
             // #########################
 
-            log.info("Parsed product " + product.getName() + product.getBrandName());
+            log.info("Parsed product " + product.getName() + " " + product.getBrandName());
 
         } catch (SocketTimeoutException exception) {
-            // TODO add logging.
             log.error("Socket timeout EXCEPTION in: " + productLink + "\nChange timeout option in Jsoup.connect() method if you want this product to be parsed.");
         } catch (IOException exception) {
             log.error("IO exception in parseCategory() method:" + exception.getMessage());
@@ -201,8 +204,9 @@ public class WildberriesClothingParser extends AbstractClothingParser {
 
     /**
      * Set all product images.
+     *
      * @param productInfo html element with product info.
-     * @param product product to bind images to.
+     * @param product     product to bind images to.
      */
     private void setProductImages(Element productInfo, Product product) {
 
@@ -222,16 +226,47 @@ public class WildberriesClothingParser extends AbstractClothingParser {
 
     /**
      * Set all product sizes.
+     *
      * @param productInfo html element with product info.
-     * @param product product to bind sizes to.
+     * @param product     product to bind sizes to.
      */
     private void setProductSizes(Element productInfo, Product product) {
 
     }
 
 
-    private void setProductColours() {
+    /**
+     * Set all product colours.
+     *
+     * @param productColours html element with product info.
+     * @param product        product to bind sizes to.
+     */
+    private void setProductColours(Element productColours, Product product) {
 
+        try {
+
+            Elements colors = productColours.getElementsByAttribute("data-cod1s");
+
+            for (Element color : colors) {
+
+                Elements images = color.getElementsByAttribute("alt");
+
+                for (Element image : images) {
+                    Colour colour = colourService.findByName(image.attr("alt"));
+                    ProductColour productColour = productColourService.getOrCreate(new ProductColour(product, colour));
+                    productColourService.save(productColour);
+
+
+                }
+
+            }
+
+        } catch (EntityNotFoundException e) {
+            log.error("Didn't found entity " + e.getEntityClass().getName() + " matching word " + e.getSearchTerm());
+        } catch (Exception e) {
+            log.error("Exception in colour parsing.");
+            //e.printStackTrace();
+        }
     }
 
     // TODO this method is temporary. Try to find another way to set categories.
