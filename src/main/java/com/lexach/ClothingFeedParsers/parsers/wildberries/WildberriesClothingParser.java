@@ -249,6 +249,7 @@ public class WildberriesClothingParser extends AbstractClothingParser {
 
             for (Element color : colors) {
 
+                // Get colour images.
                 Elements images = color.getElementsByAttribute("alt");
 
                 for (Element image : images) {

@@ -1,10 +1,12 @@
 package com.lexach.ClothingFeedParsers.service;
 
 import com.lexach.ClothingFeedParsers.model.Retailer;
+import org.springframework.stereotype.Service;
 
 /**
  * Retailer must have it's own parser named RETAILERNAMEParser.
  */
+@Service
 public interface RetailerService {
 
     public Retailer save(Retailer retailer);

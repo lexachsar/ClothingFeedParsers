@@ -15,7 +15,7 @@ public class ProductColourServiceImpl implements ProductColourService {
 
     @Override
     public ProductColour getOrCreate(ProductColour productColourParam) {
-        ProductColour databaseProductColour = productColourRepository.findByProductAndColour(productColourParam.getProduct(), productColourParam.getColour());
+      /*  ProductColour databaseProductColour = productColourRepository.findByProductAndColour(productColourParam.getProduct(), productColourParam.getColour());
 
         // If existing databaseProductColour is null -- return productColourParam.
         // Otherwise -- return existing ProductCategory from database.
@@ -24,6 +24,8 @@ public class ProductColourServiceImpl implements ProductColourService {
         } else {
             return databaseProductColour;
         }
+        */
+        return null;
     }
 
     @Override

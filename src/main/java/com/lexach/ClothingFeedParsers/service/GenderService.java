@@ -1,7 +1,9 @@
 package com.lexach.ClothingFeedParsers.service;
 
 import com.lexach.ClothingFeedParsers.model.Gender;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface GenderService {
 
     Gender save(Gender gender);

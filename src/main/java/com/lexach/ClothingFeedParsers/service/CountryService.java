@@ -1,7 +1,9 @@
 package com.lexach.ClothingFeedParsers.service;
 
 import com.lexach.ClothingFeedParsers.model.Country;
+import org.springframework.stereotype.Service;
 
+@Service
 public interface CountryService {
 
     Country save(Country country);
