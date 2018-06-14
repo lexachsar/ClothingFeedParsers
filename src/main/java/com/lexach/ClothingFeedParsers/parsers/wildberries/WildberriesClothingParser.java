@@ -187,7 +187,11 @@ public class WildberriesClothingParser extends AbstractClothingParser {
             setProductColours(productInfo, product);
 
 
-            // TODO Register ProductSizeproductService.save(product);
+            // Register ProductSizes
+
+            setProductSizes(productInfo, product);
+
+            productService.save(product);
 
             // #########################
 
@@ -232,6 +236,21 @@ public class WildberriesClothingParser extends AbstractClothingParser {
      * @param product     product to bind sizes to.
      */
     private void setProductSizes(Element productInfo, Product product) {
+
+        Elements sizesTable = productInfo.getElementById("sizes").select("td");
+
+        for (Element row : sizesTable) {
+
+            if (row.text().equals("Российский размер:")) {
+
+                String size = row.nextElementSibling().text();
+
+                ProductSize productSize = productSizeService.getOrCreate(new ProductSize(product, size));
+
+                productSizeService.save(productSize);
+            }
+
+        }
 
     }
 

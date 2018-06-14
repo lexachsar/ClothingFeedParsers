@@ -43,6 +43,9 @@ public abstract class AbstractClothingParser extends AbstractParser {
     @Autowired
     protected  ProductColourService productColourService;
 
+    @Autowired
+    protected  ProductSizeService productSizeService;
+
     protected Retailer retailer;
 
     // Gender name opposite gender link.

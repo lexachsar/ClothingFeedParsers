@@ -27,6 +27,11 @@ public class ProductSize {
     public ProductSize() {
     }
 
+    public ProductSize(Product product, String size) {
+        this.product = product;
+        this.size = size;
+    }
+
     public Long getId() {
         return id;
     }
