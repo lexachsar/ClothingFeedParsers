@@ -19,6 +19,14 @@ public class ColourComposite {
     @JoinColumn(name = "idColour", nullable = false)
     private Colour colour;
 
+    public ColourComposite() {
+    }
+
+    public ColourComposite(ProductColour productColour, Colour colour) {
+        this.productColour = productColour;
+        this.colour = colour;
+    }
+
     public Long getId() {
         return id;
     }

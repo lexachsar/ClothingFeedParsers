@@ -14,6 +14,7 @@ import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.SocketTimeoutException;
 import java.util.LinkedList;
+import java.util.Set;
 
 /**
  * wildberries.ru parser.
@@ -197,7 +198,7 @@ public class WildberriesClothingParser extends AbstractClothingParser {
         } catch (IOException exception) {
             log.error("IO exception in parseCategory() method:" + exception.getMessage());
         } catch (Exception exception) {
-            log.error("Exception");
+            log.error("Exception in product " + productLink +" parsing: " + exception.getMessage());
             exception.printStackTrace();
         }
     }
@@ -253,19 +254,27 @@ public class WildberriesClothingParser extends AbstractClothingParser {
                 Elements images = color.getElementsByAttribute("alt");
 
                 for (Element image : images) {
-                    Colour colour = colourService.findByName(image.attr("alt"));
-                    ProductColour productColour = productColourService.getOrCreate(new ProductColour(product, colour));
-                    productColourService.save(productColour);
 
+                        // For each image get colour names from it's description
+                        String colourNames = image.attr("alt");
+                        // TODO Change to get or create.
+                        ProductColour productColour = new ProductColour(product);
+                        productColourService.save(productColour);
+
+                        Set<ColourComposite> coloursComposite = colourCompositeService.getOrCreateFromNamesAndProductColour(colourNames, productColour);
+
+                        for (ColourComposite colour : coloursComposite) {
+                            colourCompositeService.save(colour);
+                        }
+
+                        productColourService.save(productColour);
 
                 }
 
             }
 
-        } catch (EntityNotFoundException e) {
-            log.error("Didn't found entity " + e.getEntityClass().getName() + " matching word " + e.getSearchTerm());
         } catch (Exception e) {
-            log.error("Exception in colour parsing.");
+            log.error("Exception in colour parsing: " + e.getMessage());
             //e.printStackTrace();
         }
     }

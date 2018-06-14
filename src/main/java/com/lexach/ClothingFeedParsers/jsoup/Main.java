@@ -16,6 +16,7 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+        /*
         // Product Document Object Model
         Document doc = Jsoup.connect("https://www.wildberries.ru//catalog/5218132/detail.aspx?targetUrl=GP").timeout(10 * 1000).get();
 
@@ -31,6 +32,14 @@ public class Main {
             System.out.println(price);
 
         }
+        */
 
+        String names = "";
+
+        String[] split = names.split(", ");
+
+        for (String spl : split) {
+            System.out.println(spl);
+        }
     }
 }

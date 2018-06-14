@@ -21,7 +21,10 @@ public class ProductColour {
     @OneToMany(mappedBy = "productColour")
     private Set<ColourComposite> coloursComposite;
 
-    public ProductColour(Product product, Colour colour) {
+    public ProductColour() {
+    }
+
+    public ProductColour(Product product) {
         this.product = product;
     }
 

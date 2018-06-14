@@ -36,6 +36,9 @@ public abstract class AbstractClothingParser extends AbstractParser {
     protected ProductImageService productImageService;
 
     @Autowired
+    protected ColourCompositeService colourCompositeService;
+
+    @Autowired
     protected  ColourService colourService;
     @Autowired
     protected  ProductColourService productColourService;

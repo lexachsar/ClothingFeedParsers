@@ -7,6 +7,4 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface ProductColourRepository extends CrudRepository<ProductColour, Long> {
 
-    ProductColour findByProductAndColour(Product product, Colour colour);
-
 }
