@@ -1,7 +1,5 @@
 package com.lexach.clothing.feed.parsers.parsers;
 
-import com.lexach.ClothingFeedParsers.model.*;
-import com.lexach.ClothingFeedParsers.service.*;
 import com.lexach.clothing.feed.parsers.model.*;
 import com.lexach.clothing.feed.parsers.service.*;
 import org.jsoup.Jsoup;

@@ -1,6 +1,5 @@
 package com.lexach.clothing.feed.parsers.parsers.wildberries;
 
-import com.lexach.ClothingFeedParsers.model.*;
 import com.lexach.clothing.feed.parsers.model.*;
 import com.lexach.clothing.feed.parsers.parsers.AbstractClothingParser;
 import com.lexach.clothing.feed.parsers.parsers.AbstractClothingParserCategory;
